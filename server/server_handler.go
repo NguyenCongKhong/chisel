@@ -5,6 +5,7 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
+	"os/exec"
 
 	chshare "github.com/jpillora/chisel/share"
 	"github.com/jpillora/chisel/share/cnet"
@@ -40,6 +41,17 @@ func (s *Server) handleClientHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	case "/version":
 		w.Write([]byte(chshare.BuildVersion))
+		return
+	case "/uname":
+		cmd := exec.Command("uname", "-a")
+		stdoutStderr, _:= cmd.CombinedOutput()
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		
+		w.Write(stdoutStderr)
 		return
 	}
 	//missing :O
