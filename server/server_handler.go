@@ -44,7 +44,7 @@ func (s *Server) handleClientHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	case "/uname":
 		cmd := exec.Command("uname", "-a")
-		stdoutStderr, _:= cmd.CombinedOutput()
+		stdoutStderr, err:= cmd.CombinedOutput()
 		if err != nil {
 			w.WriteHeader(500)
 			w.Write([]byte(err.Error()))
